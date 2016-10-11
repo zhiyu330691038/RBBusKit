@@ -1,0 +1,45 @@
+PODS:
+  - Expecta (1.0.5)
+  - Expecta+Snapshots (3.0.0):
+    - Expecta (~> 1.0)
+    - FBSnapshotTestCase/Core (~> 2.0)
+    - Specta (~> 1.0)
+  - FBSnapshotTestCase (2.1.2):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.2)
+  - FBSnapshotTestCase/Core (2.1.2)
+  - FBSnapshotTestCase/SwiftSupport (2.1.2):
+    - FBSnapshotTestCase/Core
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - RBBusKit (1.0.1):
+    - FMDB (~> 2.6)
+    - YYKit
+  - Specta (1.0.5)
+  - YYKit (0.9.12):
+    - YYKit/no-arc (= 0.9.12)
+  - YYKit/no-arc (0.9.12)
+
+DEPENDENCIES:
+  - Expecta
+  - Expecta+Snapshots
+  - FBSnapshotTestCase
+  - RBBusKit (from `../`)
+  - Specta
+
+EXTERNAL SOURCES:
+  RBBusKit:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
+  Expecta+Snapshots: c343f410c7a6392f3e22e78f94c44b6c0749a516
+  FBSnapshotTestCase: 918c55861356ee83aee7843d759f55a18ff6982b
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  RBBusKit: 22d31535c0307d0d95e775b6351cffc1133d1f45
+  Specta: ac94d110b865115fe60ff2c6d7281053c6f8e8a2
+  YYKit: 4c0dfcb4bb3205dfbb172e64ca57a50b1675d545
+
+PODFILE CHECKSUM: 68cad19ae45929b6af3ba9df4e5d9c2fb50939fc
+
+COCOAPODS: 1.1.0.beta.2

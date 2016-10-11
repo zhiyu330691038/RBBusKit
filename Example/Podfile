@@ -1,0 +1,16 @@
+use_frameworks!
+
+target 'RBBusKit_Example' do
+#  pod 'RBBusKit', :git => 'git@git.365jiating.com:zhikuiyu/Pudding_RBBusKit.git'
+#  pod "RBBusKit"
+ pod 'RBBusKit', :path => '../'
+
+  target 'RBBusKit_Tests' do
+    inherit! :search_paths
+
+    pod 'Specta'
+  pod 'Expecta'
+  pod 'FBSnapshotTestCase'
+  pod 'Expecta+Snapshots'
+  end
+end
