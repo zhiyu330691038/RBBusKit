@@ -30,8 +30,8 @@ RBBusKit is available under the MIT license. See the LICENSE file for more info.
 
 
 
-/* 保存数据
-
+### 保存数据
+``` Objective C
 NSMutableArray * array = [NSMutableArray new];
 
 for(int i = 0 ; i < 1000; i ++){
@@ -57,9 +57,11 @@ NSLog(@"%d",[rb primaryValue]);
 }
 
 */
+```
 
+### 条件查询数据
+``` Objective C
 
-/* 条件查询数据
 RB1 * rb1 = [[RB1 alloc] init];
 
 RBDBParamHelper * helper = [[RBDBParamHelper alloc] initModleClass:[RB1 class]];
@@ -94,3 +96,4 @@ rb.taa = @"111111111111111";
 });
 }];
 */
+```
