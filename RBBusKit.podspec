@@ -1,13 +1,13 @@
 Pod::Spec.new do |s|
   s.name             = 'RBBusKit'
-  s.version          = '1.1.1'
+  s.version          = '1.1.2'
   s.summary          = 'RBBusKit 公共组件.'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
                        DESC
   s.platform = :ios, "9.0"
 
-  s.homepage         = 'https://git.365jiating.com/zhikuiyu/Pudding_RBBusKit'
+  s.homepage         = 'https://github.com/zhiyu330691038/RBBusKit.git'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'zhikuiyu' => 'zhikuiyu@roobo.com' }
   s.source           = { :git => 'https://github.com/zhiyu330691038/RBBusKit.git', :tag => s.version.to_s }
