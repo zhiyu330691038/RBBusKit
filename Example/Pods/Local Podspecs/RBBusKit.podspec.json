@@ -1,12 +1,12 @@
 {
   "name": "RBBusKit",
-  "version": "1.0.1",
+  "version": "1.1.2",
   "summary": "RBBusKit 公共组件.",
   "description": "TODO: Add long description of the pod here.",
   "platforms": {
     "ios": "7.0"
   },
-  "homepage": "https://git.365jiating.com/zhikuiyu/Pudding_RBBusKit",
+  "homepage": "https://github.com/zhiyu330691038/RBBusKit",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -15,8 +15,8 @@
     "zhikuiyu": "zhikuiyu@roobo.com"
   },
   "source": {
-    "git": "git@git.365jiating.com:zhikuiyu/Pudding_RBBusKit.git",
-    "tag": "1.0.1"
+    "git": "https://github.com/zhiyu330691038/RBBusKit.git",
+    "tag": "1.1.2"
   },
   "source_files": "RBBusKit/Classes/**/*",
   "frameworks": [

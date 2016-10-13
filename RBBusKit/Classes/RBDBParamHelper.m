@@ -191,28 +191,35 @@
  */
 - (RBDBComple * (^)(id key)) comple{
     return ^RBDBComple * (id fullkey){
-        NSArray * key ;
+        NSString * key ;
         if([fullkey containsString:@"."]){
             key = [[fullkey componentsSeparatedByString:@"."] lastObject];
         }else{
             key =fullkey;
         }
         
+        RBDBComple * help = [[RBDBComple alloc] init];
+        help.dbHelper = self;
+        
         NSDictionary * dict = [modleClass infoWithInstance:key];
         if(dict == nil){
             NSString * str = [NSString stringWithFormat:@"%@ 不存此变量",[modleClass description]];
             NSAssert(dict != nil, @"");
             return nil;
+        }else if([key isEqualToString:[modleClass primary]]){
+            [whereParam appendFormat:@" %@ ", key];
+         
+            return help;
+        }else{
+            NSString * name = dict[@"name"];
+            NSString * property = dict[@"property"];
+            [whereParam appendFormat:@" %@ ", name];
+            if([[[self class] ocTypeToSql:property] isEqualToString:@"TEXT"]){
+                help.isStringType = YES;
+            }
+            return help;
         }
-        NSString * name = dict[@"name"];
-        NSString * property = dict[@"property"];
-        [whereParam appendFormat:@" %@ ", name];
-        RBDBComple * help = [[RBDBComple alloc] init];
-        help.dbHelper = self;
-        if([[[self class] ocTypeToSql:property] isEqualToString:@"TEXT"]){
-            help.isStringType = YES;
-        }
-        return help;
+       
     };
 }
 

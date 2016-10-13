@@ -33,7 +33,7 @@ FMDatabaseQueue * DBQueue(){
 }
 
 + (NSString *)primary{
-
+    
     if([self instancesRespondToSelector:@selector(primary)]){
         return [self primary];
     }
@@ -52,7 +52,7 @@ FMDatabaseQueue * DBQueue(){
     
     return isHas;
     
-
+    
 }
 
 
@@ -61,7 +61,7 @@ FMDatabaseQueue * DBQueue(){
 }
 
 - (int)primaryValue{
-
+    
     return [objc_getAssociatedObject(self, @"primaryValue") intValue];
 }
 
@@ -69,10 +69,10 @@ FMDatabaseQueue * DBQueue(){
 
 
 + (void)transaction:(NSArray *(^)(void)) block{
-
+    
     if(block){
         NSLog(@"%@",[NSDate date]);
-
+        
         [DBQueue() inTransaction:^(FMDatabase *db, BOOL *rollback) {
             NSArray * sqlArray = block();
             for(NSString * str in sqlArray){
@@ -80,7 +80,7 @@ FMDatabaseQueue * DBQueue(){
             }
         }];
         NSLog(@"%@",[NSDate date]);
-
+        
     }
 }
 
@@ -90,11 +90,11 @@ FMDatabaseQueue * DBQueue(){
         [DBQueue() inDatabase:^(FMDatabase *db) {
             [db executeUpdate:sql];
         }];
-
+        
     }
 }
 
-#pragma mark - 
+#pragma mark -
 
 - (NSString *)getCheckIsMyStr{
     BOOL is = [[self class] primaryKeyObjVar];
@@ -120,8 +120,8 @@ FMDatabaseQueue * DBQueue(){
     }else{
         return  sql = [NSString stringWithFormat:@" %@ == %@", [[self class] primary],@([self primaryValue])];
     }
-
-
+    
+    
 }
 
 
@@ -188,15 +188,19 @@ FMDatabaseQueue * DBQueue(){
  *  @param param 新增数据的条件
  */
 - (void)saveParam:(RBDBParamHelper *)param{
-    NSDictionary * dict = [self modelToJSONObject];
-
-   __block NSDictionary * sqlino =  [[self class] getSql:param ObjInfos:dict];
+    
     
     [DBQueue() inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:sqlino[@"sql"] withParameterDictionary:sqlino[@"value"]];
-        if(![[self class] primaryKeyObjVar]){
-            [self setPrimaryValue:[db lastInsertRowId]];
-        }
+        
+        [[self class] enumerationChild:self Param:param excueBlock:^int(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
+            __block NSDictionary * sqlino =  [[modle class] getSql:param ObjInfos:saveDict];
+            [db executeUpdate:sqlino[@"sql"] withParameterDictionary:sqlino[@"value"]];
+            if(![[self class] primaryKeyObjVar]){
+                [modle setPrimaryValue:[db lastInsertRowId]];
+            }
+            return [db lastInsertRowId];
+            
+        }];
         
     }];
 }
@@ -248,15 +252,7 @@ FMDatabaseQueue * DBQueue(){
 + (void)save:(NSArray <id<RBDBProtocol>> *) array Param:(RBDBParamHelper *)param{
     [DBQueue() inTransaction:^(FMDatabase *db, BOOL *rollback) {
         for(NSObject * obj in array){
-            [self enumerationChild:obj Param:param excueBlock:^int(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
-                __block NSDictionary * sqlino =  [[modle class] getSql:param ObjInfos:saveDict];
-                [db executeUpdate:sqlino[@"sql"] withParameterDictionary:sqlino[@"value"]];
-                if(![self primaryKeyObjVar]){
-                    [modle setPrimaryValue:[db lastInsertRowId]];
-                }
-                return [db lastInsertRowId];
-
-            }];
+            [obj saveParam:param];
         }
     }];
 }
@@ -289,7 +285,7 @@ FMDatabaseQueue * DBQueue(){
     [DBQueue() inDatabase:^(FMDatabase *db) {
         [db executeUpdate:sql];
     }];
-
+    
 }
 
 /**
@@ -300,7 +296,7 @@ FMDatabaseQueue * DBQueue(){
  *  @param param 删除条件
  */
 + (void)removeParam:(RBDBParamHelper *)param{
-
+    
     NSString * sql = [NSString stringWithFormat:@"DELETE FROM %@",[[self class] getTableName]];
     if(param){
         NSString * where = [param getTerm];
@@ -334,7 +330,7 @@ FMDatabaseQueue * DBQueue(){
     [DBQueue() inDatabase:^(FMDatabase *db) {
         [NSObject enumerationChild:self Param:parama excueBlock:^int(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
             NSString * checkMy = [modle getCheckIsMyStr];
-
+            
             
             NSString * sql ;
             NSDictionary * info = [modle getUpdateSql:param ObjInfos:saveDict];
@@ -347,7 +343,7 @@ FMDatabaseQueue * DBQueue(){
             return modle.primaryValue;
         }];
         
-  
+        
     }];
 }
 
@@ -415,7 +411,7 @@ FMDatabaseQueue * DBQueue(){
     if(dataBlock == nil)
         return;
     
-  
+    
     
     [DBQueue() inDatabase:^(FMDatabase *db) {
         [self getResultData:db param:param IsDone:YES excueBlock:^(NSArray * array) {
@@ -423,9 +419,9 @@ FMDatabaseQueue * DBQueue(){
                 dataBlock(array);
             }
         }];
-
+        
     }];
-
+    
 }
 
 
@@ -442,7 +438,7 @@ FMDatabaseQueue * DBQueue(){
 #pragma mark - 数据解析
 
 + (NSArray *)getResultData:(FMDatabase *)db param:(RBDBParamHelper *)param IsDone:(BOOL)isDone excueBlock:(void (^)(NSArray *)) block{
-
+    
     NSString * sql = [NSString stringWithFormat:@"SELECT * FROM %@ ",[[self class] getTableName]];
     if(param){
         NSString * where = [param getTerm];
@@ -453,7 +449,7 @@ FMDatabaseQueue * DBQueue(){
     NSArray * array =  [self dbsetToArray:set];
     
     NSArray * modlePropers = [[self class] getAllProperties];
-
+    
     
     NSMutableArray * comArray = [NSMutableArray new];
     
@@ -507,9 +503,9 @@ FMDatabaseQueue * DBQueue(){
         [searchModle setPrimaryValue:[[result objectForKey:[self primary]] intValue]];
         
         [comArray addObject:searchModle];
-
+        
     }
-  
+    
     if(block && isDone){
         block(comArray);
     }
@@ -543,7 +539,7 @@ FMDatabaseQueue * DBQueue(){
                 [self dbStringToObj:result[name]];
             }
             
-        
+            
         }
         
         
@@ -553,7 +549,7 @@ FMDatabaseQueue * DBQueue(){
         for(NSDictionary * propertyInfo in modlePropers){
             NSString * property = [propertyInfo objectForKey:@"property"];
             NSString * name = [propertyInfo objectForKey:@"name"];
-
+            
             if([allColumns containsObject:name]){
                 
                 
@@ -578,7 +574,7 @@ FMDatabaseQueue * DBQueue(){
         if(!is){
             int obj = [set intForColumn:[self primary]];
             [modle setPrimaryValue:obj];
-        
+            
         }
         
     }
