@@ -10,6 +10,7 @@
 
 #import "NSObject+RBDBHandle.h"
 #import <YYKit/NSObject+YYModel.h>
+#import "NSObject+RBModle.h"
 
 
 @protocol RBDBProtocol <NSObject>

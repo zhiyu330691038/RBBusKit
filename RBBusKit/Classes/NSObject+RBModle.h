@@ -10,4 +10,6 @@
 
 @interface NSObject (RBModle)
 
+- (void)updateFromModle:(NSObject *)obj;
+
 @end

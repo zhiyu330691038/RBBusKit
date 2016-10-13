@@ -99,6 +99,8 @@
 		372F7A9CCE59CE86316CF436F832A3FC /* EXPMatchers+beGreaterThanOrEqualTo.h in Headers */ = {isa = PBXBuildFile; fileRef = AAE57F64E95840015CE9015C9148F153 /* EXPMatchers+beGreaterThanOrEqualTo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		37A2D0F8493469EF2495FC689440F079 /* EXPMatchers+beLessThanOrEqualTo.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C139AF05A009B0E99841B45A422D5E /* EXPMatchers+beLessThanOrEqualTo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		381A84FB18D3AF5947C1C2DD555C5A86 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 622143ED5F135297A2922186E3696609 /* Foundation.framework */; };
+		381C92431DAF85CA00C7CD26 /* NSObject+RBModle.h in Headers */ = {isa = PBXBuildFile; fileRef = 381C92411DAF85CA00C7CD26 /* NSObject+RBModle.h */; };
+		381C92441DAF85CA00C7CD26 /* NSObject+RBModle.m in Sources */ = {isa = PBXBuildFile; fileRef = 381C92421DAF85CA00C7CD26 /* NSObject+RBModle.m */; };
 		38B2A8E1E39D7F053432716C239354E7 /* FBSnapshotTestCasePlatform.m in Sources */ = {isa = PBXBuildFile; fileRef = 8842953678FD99F36DD1444F2751F30E /* FBSnapshotTestCasePlatform.m */; };
 		394CE0AF2C1277FE12C27D26D6293133 /* NSObject+RBTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2067A1735D1B49D887098F19065AE9 /* NSObject+RBTools.m */; };
 		39723A242362C157E0D3BABE75D6F72E /* YYImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CBF97DD24988EEE5A3517CBDD26140E /* YYImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -641,6 +643,8 @@
 		36DD3E54F7657AFAC30A70D5868FC8B0 /* UIButton+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIButton+AFNetworking.m"; path = "UIKit+AFNetworking/UIButton+AFNetworking.m"; sourceTree = "<group>"; };
 		3765E0D1F42349497F5D24F7280075DF /* YYKeychain.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYKeychain.h; path = YYKit/Utility/YYKeychain.h; sourceTree = "<group>"; };
 		380A48FDEF8528874F2DAFF245EA0B4D /* YYTextMagnifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYTextMagnifier.m; path = YYKit/Text/Component/YYTextMagnifier.m; sourceTree = "<group>"; };
+		381C92411DAF85CA00C7CD26 /* NSObject+RBModle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+RBModle.h"; sourceTree = "<group>"; };
+		381C92421DAF85CA00C7CD26 /* NSObject+RBModle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+RBModle.m"; sourceTree = "<group>"; };
 		39577CC8DB8AFE0F6A365A943CA45792 /* YYTextRubyAnnotation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYTextRubyAnnotation.m; path = YYKit/Text/String/YYTextRubyAnnotation.m; sourceTree = "<group>"; };
 		3A0CD0866DC433D91C064A864BD780CF /* Pods-RBBusKit_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-RBBusKit_Example-frameworks.sh"; sourceTree = "<group>"; };
 		3B43CCA898A237737E52E89130431698 /* EXPMatchers+beLessThanOrEqualTo.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "EXPMatchers+beLessThanOrEqualTo.m"; path = "Expecta/Matchers/EXPMatchers+beLessThanOrEqualTo.m"; sourceTree = "<group>"; };
@@ -1158,6 +1162,8 @@
 				5D6292F6AEA0AFD1FE697A8D4338CF13 /* RBDBParamHelper.h */,
 				A68C871117175DEC5445F71D1E814954 /* RBDBParamHelper.m */,
 				E0D2C2451A6FC822589401EE972B7246 /* RBDBProtocol.h */,
+				381C92411DAF85CA00C7CD26 /* NSObject+RBModle.h */,
+				381C92421DAF85CA00C7CD26 /* NSObject+RBModle.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1987,6 +1993,7 @@
 				AB39AC9746E7575D7449700475E41B0B /* AFHTTPSessionManager.h in Headers */,
 				5808B477EFF509D810B5CDCFDC944F80 /* AFImageDownloader.h in Headers */,
 				1480F4923DBBF217F60572EEECB4027C /* AFNetworkActivityIndicatorManager.h in Headers */,
+				381C92431DAF85CA00C7CD26 /* NSObject+RBModle.h in Headers */,
 				EC7CADE416A78A1CD6936018A6695126 /* AFNetworking-umbrella.h in Headers */,
 				E7988678C81F7CCB95D239375FC6986D /* AFNetworking.h in Headers */,
 				68152D921ABF6A423C192C04FDF94F0F /* AFNetworkReachabilityManager.h in Headers */,
@@ -2543,6 +2550,7 @@
 				B5852322ADE88AAD56EE042B80BA81E4 /* AFURLResponseSerialization.m in Sources */,
 				707B1A7541C8DBDDE8C27896A61370BE /* AFURLSessionManager.m in Sources */,
 				6ED4ABEE8A5F51F5ECB59FA1781D29C6 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
+				381C92441DAF85CA00C7CD26 /* NSObject+RBModle.m in Sources */,
 				AF03C11A1FAC8132AD3749D8F541701A /* UIButton+AFNetworking.m in Sources */,
 				2E8A32ED46194EDBE22146271F6D26DE /* UIImageView+AFNetworking.m in Sources */,
 				5FF6453E55785669885F626B853FD2AA /* UIProgressView+AFNetworking.m in Sources */,

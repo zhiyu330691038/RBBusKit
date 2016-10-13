@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'RBBusKit'
-  s.version          = '1.1.3'
+  s.version          = '1.1.4'
   s.summary          = 'RBBusKit 公共组件.'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.

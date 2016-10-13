@@ -196,9 +196,9 @@ FMDatabaseQueue * DBQueue(){
             __block NSDictionary * sqlino =  [[modle class] getSql:param ObjInfos:saveDict];
             [db executeUpdate:sqlino[@"sql"] withParameterDictionary:sqlino[@"value"]];
             if(![[self class] primaryKeyObjVar]){
-                [modle setPrimaryValue:[db lastInsertRowId]];
+                [modle setPrimaryValue:(int)[db lastInsertRowId]];
             }
-            return [db lastInsertRowId];
+            return (int)[db lastInsertRowId];
             
         }];
         
@@ -207,8 +207,8 @@ FMDatabaseQueue * DBQueue(){
 
 
 
-+ (int )enumerationChild:(NSObject<RBDBProtocol> *)obj Param:(RBDBParamHelper *)param excueBlock:(int (^)(RBDBParamHelper *,NSDictionary *,NSObject<RBDBProtocol> *)) block{
-    NSMutableDictionary * saveDict = [[NSMutableDictionary alloc] initWithDictionary:[obj modelToJSONObject]];
++ (int )enumerationChild:(NSObject *)obj Param:(RBDBParamHelper *)param excueBlock:(int (^)(RBDBParamHelper *,NSDictionary *,NSObject<RBDBProtocol> *)) block{
+    NSMutableDictionary * saveDict = [[NSMutableDictionary alloc] init];
     NSArray * array = [[obj class] getAllPropertiesNamed];
     for(NSString * key in array){
         id value = [obj valueForKey:key];
@@ -347,7 +347,7 @@ FMDatabaseQueue * DBQueue(){
     }];
 }
 
-- (NSString *)getUpdateSql:(RBDBParamHelper *)param ObjInfos:(NSDictionary *)dict{
+- (NSDictionary *)getUpdateSql:(RBDBParamHelper *)param ObjInfos:(NSDictionary *)dict{
     if([dict count] == 0){
         NSLog(@"data is nil");
         return nil;
@@ -383,7 +383,7 @@ FMDatabaseQueue * DBQueue(){
     if(param){
         NSString * where = [param getTerm];
         if(where)
-            sql = [NSString stringWithFormat:@"%@ %@",sql,where];
+            sql = (NSString *)[NSString stringWithFormat:@"%@ %@",sql,where];
     }
     return @{@"sql":sql , @"values":values};
 }
@@ -429,7 +429,7 @@ FMDatabaseQueue * DBQueue(){
     if (dbString != nil && ![dbString isKindOfClass:[NSNull class]]) {
         NSError *error = nil;
         NSData * data = [dbString dataUsingEncoding:NSUTF8StringEncoding];
-        id obj = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+        id obj = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         return  obj ;
     }
     return nil;
@@ -464,7 +464,7 @@ FMDatabaseQueue * DBQueue(){
             NSObject * value = result[name];
             
             if([class isSubclassOfClass:[NSArray class]]){
-                NSObject * dbtype = [self dbStringToObj:value];
+                NSObject * dbtype = [self dbStringToObj:(NSString *)value];
                 if(dbtype == nil){
                     [aaaa setObject:value forKey:name];
                     continue;
@@ -556,11 +556,11 @@ FMDatabaseQueue * DBQueue(){
                 
                 NSObject * obj = [set objectForColumnName:name];
                 if(![obj isKindOfClass:[NSNull class]]){
-                    NSObject * value = obj;
+
                     if([property isEqualToString:@"UIImage"]){
-                        obj = [UIImage imageWithData:obj];
+                        obj = (NSObject *)[UIImage imageWithData:obj];
                     }else if([property isEqualToString:@"NSDate"]){
-                        obj = [NSDate dateWithTimeIntervalSince1970:[(NSNumber *)obj floatValue]];
+                        obj = (NSDate *)[NSDate dateWithTimeIntervalSince1970:[(NSNumber *)obj floatValue]];
                     }
                     if(obj){
                         [modle setValue:obj forKey:name];
