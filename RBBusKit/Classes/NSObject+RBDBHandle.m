@@ -208,7 +208,7 @@ FMDatabaseQueue * DBQueue(){
 
 
 + (int )enumerationChild:(NSObject *)obj Param:(RBDBParamHelper *)param excueBlock:(int (^)(RBDBParamHelper *,NSDictionary *,NSObject<RBDBProtocol> *)) block{
-    NSMutableDictionary * saveDict = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary * saveDict = [[NSMutableDictionary alloc] initWithDictionary:[obj modelToJSONObject]];
     NSArray * array = [[obj class] getAllPropertiesNamed];
     for(NSString * key in array){
         id value = [obj valueForKey:key];

@@ -16,7 +16,8 @@
         NSLog(@"只能是同类型的modle");
         return;
     }
-    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     Class clazz = [self class];
     u_int count;
     objc_property_t* properties = class_copyPropertyList(clazz, &count);
@@ -36,7 +37,7 @@
         }
     }
     free(properties);
-
+#pragma clang diagnostic pop
 }
 
 @end
