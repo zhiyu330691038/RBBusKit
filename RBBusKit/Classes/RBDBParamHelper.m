@@ -51,7 +51,7 @@
         RBDBTerm * comple = [[RBDBTerm alloc] init];
         comple.dbHelper = self.dbHelper;
         return comple;
-
+        
     };
 }
 - (RBDBTerm * (^)(NSString *)) contain{
@@ -84,7 +84,7 @@
 
 
 - (RBDBTerm *)getResult:(NSObject *)value{
-
+    
     [self.dbHelper appendParam:self.isStringType ? [NSString stringWithFormat:@"'%@'",value] : value];
     RBDBTerm * comple = [[RBDBTerm alloc] init];
     comple.dbHelper = self.dbHelper;
@@ -141,7 +141,7 @@
 - (id)initModleClass:(Class)mclass{
     if(self = [super init]){
         modleClass = mclass;
-      
+        
         whereParam = [NSMutableString new];
         
         orderBy = [NSMutableArray new];
@@ -156,7 +156,7 @@
 - (NSString *)getTerm{
     
     NSMutableString * where = [NSMutableString new];
-  
+    
     if([whereParam length] > 0){
         [whereParam insertString:@"WHERE " atIndex:0];
     }
@@ -202,13 +202,13 @@
         help.dbHelper = self;
         
         NSDictionary * dict = [modleClass infoWithInstance:key];
-        if(dict == nil){
+        if(dict == nil && ![key isEqualToString:[modleClass primary]]){
             NSString * str = [NSString stringWithFormat:@"%@ 不存此变量",[modleClass description]];
             NSAssert(dict != nil, @"");
             return nil;
         }else if([key isEqualToString:[modleClass primary]]){
             [whereParam appendFormat:@" %@ ", key];
-         
+            
             return help;
         }else{
             NSString * name = dict[@"name"];
@@ -219,7 +219,7 @@
             }
             return help;
         }
-       
+        
     };
 }
 
