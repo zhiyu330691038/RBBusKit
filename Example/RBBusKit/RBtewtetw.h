@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RBDBProtocol.h"
-@interface RBtewtetw : NSObject<RBDBProtocol>
+@interface RBtewtetw : NSObject<RBDBProtocol,NSCopying,NSCoding>
 @property(nonatomic,assign) int aaa NS_AVAILABLE(10.4, 8.0);
 @property(nonatomic,assign) float aaaa NS_AVAILABLE(10.4, 8.0);
 @end

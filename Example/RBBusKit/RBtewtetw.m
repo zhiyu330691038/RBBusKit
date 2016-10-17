@@ -12,4 +12,27 @@
 + (NSString *)primary{
     return @"aaa";
 }
+
+
+#pragma mark ------------------- 解析部分 ------------------------
+//归档
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [self modelEncodeWithCoder:aCoder];
+}
+//解档
+- (id)initWithCoder:(NSCoder *)aDecoder{
+    self = [super init];
+    return  [self modelInitWithCoder:aDecoder];
+}
+
+//打印
+-(NSString *)description{
+    return [self modelDescription];
+}
+
+//拷贝
+-(id)copyWithZone:(NSZone *)zone{
+    return [self modelCopy];
+}
+
 @end

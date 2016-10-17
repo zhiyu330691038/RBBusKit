@@ -10,7 +10,7 @@
 #import "RBtewtetw.h"
 
 
-@interface RB1 : NSObject<RBDBProtocol>
+@interface RB1 : NSObject<RBDBProtocol,NSCopying,NSCoding>
 
 
 @property(nonatomic,assign) int aaa NS_AVAILABLE(10.4, 8.0);

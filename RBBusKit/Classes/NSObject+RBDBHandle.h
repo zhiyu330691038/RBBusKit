@@ -21,10 +21,11 @@
  *  只设置默认类型主键
  *
  */
-- (void)setPrimaryValue:(int)obj;
+- (void)setPrimaryValue:(NSObject *)obj;
 
-- (int)primaryValue;
+- (NSObject *)primaryValue;
 
++ (void)changeCopyMethod;
 
 #pragma mark - SQL 语句执行
 

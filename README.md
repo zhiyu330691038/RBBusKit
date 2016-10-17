@@ -53,7 +53,7 @@ rb.f = i * i;
 
 for(int i = 0 ; i < 1000; i ++){
 RB1 * rb = [array objectAtIndex:i];
-NSLog(@"%d",[rb primaryValue]);
+NSLog(@"%@",[rb primaryValue]);
 }
 
 */

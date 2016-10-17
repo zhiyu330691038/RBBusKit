@@ -47,7 +47,7 @@ __attribute__((overloadable)) void logAnything(CGRect rect) {
 
     NSMutableArray * array = [NSMutableArray new];
     
-    for(int i = 0 ; i < 1; i ++){
+    for(int i = 0 ; i < 100; i ++){
         RB1 * rb = [[RB1 alloc] init];
         rb.aaa = i + 1000;
         rb.aaaa = 10000 - i * i ;
@@ -59,6 +59,7 @@ __attribute__((overloadable)) void logAnything(CGRect rect) {
         aaa.aaaa = 3433;
         rb.arr = @[aaa];
         rb.modle = aaa;
+        aaa.aaa = rand() % 1000;
         rb.adta = [NSDate dateWithTimeIntervalSinceNow:i % 100];
         rb.f = i * i;
         
@@ -70,13 +71,12 @@ __attribute__((overloadable)) void logAnything(CGRect rect) {
     
     [RB1 save:array Param:nil];
     
-    for(int i = 0 ; i < 1; i ++){
+    for(int i = 10 ; i < 20; i ++){
         RB1 * rb = [array objectAtIndex:i];
-        NSLog(@"%d",[rb primaryValue]);
         NSArray * aa = rb.arr;
         ((RBtewtetw *)[aa objectAtIndex:0]).aaaa = 3234;
-        
-        [rb update];
+        [rb copy];
+        [[rb copy] update];
     }
     
     

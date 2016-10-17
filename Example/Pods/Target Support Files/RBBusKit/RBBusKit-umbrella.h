@@ -2,6 +2,7 @@
 
 #import "NSObject+RBDBHandle.h"
 #import "NSObject+RBDBVersionManager.h"
+#import "NSObject+RBModle.h"
 #import "NSObject+RBTools.h"
 #import "RBDBParamHelper.h"
 #import "RBDBProtocol.h"

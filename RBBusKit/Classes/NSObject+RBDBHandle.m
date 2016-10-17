@@ -12,6 +12,7 @@
 #import "NSObject+RBDBVersionManager.h"
 #import "objc/runtime.h"
 #import <YYKit/NSArray+YYAdd.h>
+#import "RBDBProtocol.h"
 
 @implementation NSObject (RBDBHandle)
 
@@ -43,12 +44,9 @@ FMDatabaseQueue * DBQueue(){
 
 + (bool)primaryKeyObjVar{
     static BOOL isHas;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSArray * array = [self getAllPropertiesNamed];
-        isHas = [array containsObject:[self primary]];
-    });
+
+    NSArray * array = [self getAllPropertiesNamed];
+    isHas = [array containsObject:[self primary]];
     
     return isHas;
     
@@ -56,13 +54,18 @@ FMDatabaseQueue * DBQueue(){
 }
 
 
-- (void)setPrimaryValue:(int)obj{
-    objc_setAssociatedObject(self, @"primaryValue", @(obj), OBJC_ASSOCIATION_ASSIGN);
+- (void)setPrimaryValue:(NSObject *)obj{
+    NSLog(@"setPrimaryValue %@",obj);
+    if(![[self class] primaryKeyObjVar]){
+        objc_setAssociatedObject(self, @"primaryValue", obj, OBJC_ASSOCIATION_ASSIGN);
+    }
 }
 
-- (int)primaryValue{
-    
-    return [objc_getAssociatedObject(self, @"primaryValue") intValue];
+- (NSObject *)primaryValue{
+    if(![[self class] primaryKeyObjVar]){
+        return objc_getAssociatedObject(self, @"primaryValue");
+    }
+    return [self valueForKey:[[self class]primary]];
 }
 
 #pragma mark - SQL 语句执行
@@ -118,7 +121,7 @@ FMDatabaseQueue * DBQueue(){
         }
         return [NSString stringWithFormat:@" %@ == %@", [[self class] primary],value];
     }else{
-        return  sql = [NSString stringWithFormat:@" %@ == %@", [[self class] primary],@([self primaryValue])];
+        return  sql = [NSString stringWithFormat:@" %@ == %@", [[self class] primary],[self primaryValue]];
     }
     
     
@@ -192,13 +195,11 @@ FMDatabaseQueue * DBQueue(){
     
     [DBQueue() inDatabase:^(FMDatabase *db) {
         
-        [[self class] enumerationChild:self Param:param excueBlock:^int(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
+        [[self class] enumerationChild:self Param:param excueBlock:^NSObject *(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
             __block NSDictionary * sqlino =  [[modle class] getSql:param ObjInfos:saveDict];
             [db executeUpdate:sqlino[@"sql"] withParameterDictionary:sqlino[@"value"]];
-            if(![[self class] primaryKeyObjVar]){
-                [modle setPrimaryValue:(int)[db lastInsertRowId]];
-            }
-            return (int)[db lastInsertRowId];
+            [modle setPrimaryValue:@([db lastInsertRowId])];
+            return @([db lastInsertRowId]);
             
         }];
         
@@ -207,7 +208,7 @@ FMDatabaseQueue * DBQueue(){
 
 
 
-+ (int )enumerationChild:(NSObject *)obj Param:(RBDBParamHelper *)param excueBlock:(int (^)(RBDBParamHelper *,NSDictionary *,NSObject<RBDBProtocol> *)) block{
++ (NSObject * )enumerationChild:(NSObject *)obj Param:(RBDBParamHelper *)param excueBlock:(NSObject * (^)(RBDBParamHelper *,NSDictionary *,NSObject<RBDBProtocol> *)) block{
     NSMutableDictionary * saveDict = [[NSMutableDictionary alloc] initWithDictionary:[obj modelToJSONObject]];
     NSArray * array = [[obj class] getAllPropertiesNamed];
     for(NSString * key in array){
@@ -219,7 +220,7 @@ FMDatabaseQueue * DBQueue(){
             NSArray * currentValue = (NSArray *)value;
             for(id a in currentValue){
                 if([a conformsToProtocol:@protocol(RBDBProtocol)]){
-                    int oldid = [self enumerationChild:a Param:nil excueBlock:block];
+                    NSObject * oldid = [self enumerationChild:a Param:nil excueBlock:block];
                     [a setPrimaryValue:oldid];
                     [newArray addObject:[NSString stringWithFormat:@"db_modle|%@|%@|%d",NSStringFromClass([a class]),[[a class] getTableName],oldid]];
                 }
@@ -232,7 +233,7 @@ FMDatabaseQueue * DBQueue(){
             }
             [saveDict setValue:json forKey:key];
         }else if([value conformsToProtocol:@protocol(RBDBProtocol)]){
-            int oldid = [self enumerationChild:value Param:nil excueBlock:block];
+            NSObject * oldid = [self enumerationChild:value Param:nil excueBlock:block];
             [value setPrimaryValue:oldid];
             [saveDict setValue:[NSString stringWithFormat:@"db_modle|%@|%@|%d",NSStringFromClass([value class]),[[value class] getTableName],oldid] forKey:key];
         }
@@ -250,11 +251,9 @@ FMDatabaseQueue * DBQueue(){
  *  @param param 保存的条件
  */
 + (void)save:(NSArray <id<RBDBProtocol>> *) array Param:(RBDBParamHelper *)param{
-    [DBQueue() inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        for(NSObject * obj in array){
-            [obj saveParam:param];
-        }
-    }];
+    for(NSObject * obj in array){
+        [obj saveParam:param];
+    }
 }
 
 
@@ -265,12 +264,12 @@ FMDatabaseQueue * DBQueue(){
  */
 - (void)remove{
     [DBQueue() inDatabase:^(FMDatabase *db) {
-        [NSObject enumerationChild:self Param:nil excueBlock:^int(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
+        [NSObject enumerationChild:self Param:nil excueBlock:^NSObject *(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
             NSString * checkMy = [modle getCheckIsMyStr];
             NSString * sql = [NSString stringWithFormat:@"DELETE FROM %@ where %@",[[modle class] getTableName], checkMy];
             __block NSDictionary * sqlino =  [[modle class] getSql:param ObjInfos:saveDict];
             [db executeUpdate:sql];
-            return -1;
+            return nil;
         }];
     }];
 }
@@ -328,7 +327,7 @@ FMDatabaseQueue * DBQueue(){
  */
 - (void)updateParam:(RBDBParamHelper *)parama{
     [DBQueue() inDatabase:^(FMDatabase *db) {
-        [NSObject enumerationChild:self Param:parama excueBlock:^int(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
+        [NSObject enumerationChild:self Param:parama excueBlock:^NSObject *(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
             NSString * checkMy = [modle getCheckIsMyStr];
             
             
@@ -500,7 +499,7 @@ FMDatabaseQueue * DBQueue(){
         }
         
         NSObject * searchModle = [[self class] modelWithDictionary:aaaa];
-        [searchModle setPrimaryValue:[[result objectForKey:[self primary]] intValue]];
+        [searchModle setPrimaryValue:[result objectForKey:[self primary]]];
         
         [comArray addObject:searchModle];
         
@@ -570,16 +569,64 @@ FMDatabaseQueue * DBQueue(){
                 NSLog(@"sqlite not contant line --> %@",name);
             }
         }
-        BOOL is = [[self class] primaryKeyObjVar];
-        if(!is){
-            int obj = [set intForColumn:[self primary]];
+   
+            
+            NSString * obj = [set stringForColumn:[self primary]];
             [modle setPrimaryValue:obj];
             
-        }
         
     }
     return result;
 }
 
+
+
+#pragma mark - 数据copy 情况
+
+
++ (void)changeCopyMethod{
+
+    Class selfClass = [self class];
+    SEL oriSEL = @selector(copyWithZone:);
+    Method oriMethod = class_getInstanceMethod(selfClass, oriSEL);
+    
+    SEL cusSEL = @selector(rb_copyWithZone:);
+    Method cusMethod = class_getInstanceMethod(selfClass, cusSEL);
+    
+    BOOL addSucc = class_addMethod(selfClass, oriSEL, method_getImplementation(cusMethod), method_getTypeEncoding(cusMethod));
+    if (addSucc) {
+        class_replaceMethod(selfClass, cusSEL, method_getImplementation(oriMethod), method_getTypeEncoding(oriMethod));
+    }else {
+        method_exchangeImplementations(oriMethod, cusMethod);
+    }
+    
+
+    
+}
+
+
+//归档
+- (void)rb_encodeWithCoder:(NSCoder *)aCoder {
+    
+    [self rb_encodeWithCoder:aCoder];
+    [aCoder encodeObject:[self primaryValue] forKey:@"prikey"] ;
+
+}
+//解档
+- (id)rb_initWithCoder:(NSCoder *)aDecoder{
+    NSObject * obj = [self rb_initWithCoder:aDecoder];
+    if([self conformsToProtocol:@protocol(RBDBProtocol)]){
+        [obj setPrimaryValue:[aDecoder decodeObjectForKey:@"prikey"]];
+    }
+    return obj;
+}
+
+- (id)rb_copyWithZone:(NSZone *)zone{
+    NSObject * object = [self rb_copyWithZone:zone];
+    if([object conformsToProtocol:@protocol(RBDBProtocol)]){
+        [object setPrimaryValue:[self primaryValue]];
+    }
+    return object;
+}
 
 @end

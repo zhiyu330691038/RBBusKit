@@ -4,11 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>AFNetworking.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Expecta+Snapshots.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -44,11 +39,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>RBNetwork.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Specta.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -72,32 +62,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>1C3436CEA5C3D39764C5F54374794ECB</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>23CF27B2BA6AC7125EFFEDA8C5AA819F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2D0D799E899363E10CC9FBB0094CA922</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>33199E4C6A6AB5631FB6476921684F4A</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>584A54659C5DE49FBCE6D86ADB5941BC</key>
+		<key>30D17BEEBF97964E4835C4517BDBF18D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>87312DE5EE228BC5742AA21B44ECF379</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>99BA989755E5E092C5F21DB9AF0EEBD5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -112,7 +92,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>ADA3BE18577E20A5E5EC491B357D76B0</key>
+		<key>DB7D5A10F3D159C596A6DBD058167BAD</key>
 		<dict>
 			<key>primary</key>
 			<true/>

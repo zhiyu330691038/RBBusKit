@@ -1,19 +1,4 @@
 PODS:
-  - AFNetworking (3.1.0):
-    - AFNetworking/NSURLSession (= 3.1.0)
-    - AFNetworking/Reachability (= 3.1.0)
-    - AFNetworking/Security (= 3.1.0)
-    - AFNetworking/Serialization (= 3.1.0)
-    - AFNetworking/UIKit (= 3.1.0)
-  - AFNetworking/NSURLSession (3.1.0):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.1.0)
-  - AFNetworking/Security (3.1.0)
-  - AFNetworking/Serialization (3.1.0)
-  - AFNetworking/UIKit (3.1.0):
-    - AFNetworking/NSURLSession
   - Expecta (1.0.5)
   - Expecta+Snapshots (3.0.0):
     - Expecta (~> 1.0)
@@ -27,11 +12,8 @@ PODS:
   - FMDB (2.6.2):
     - FMDB/standard (= 2.6.2)
   - FMDB/standard (2.6.2)
-  - RBBusKit (1.1.2):
+  - RBBusKit (1.1.4):
     - FMDB (~> 2.6)
-    - YYKit
-  - RBNetwork (1.0.2):
-    - AFNetworking
     - YYKit
   - Specta (1.0.5)
   - YYKit (0.9.12):
@@ -43,31 +25,21 @@ DEPENDENCIES:
   - Expecta+Snapshots
   - FBSnapshotTestCase
   - RBBusKit (from `../`)
-  - RBNetwork (from `git@git.365jiating.com:baxiang1/RBNetwork.git`)
   - Specta
 
 EXTERNAL SOURCES:
   RBBusKit:
     :path: "../"
-  RBNetwork:
-    :git: git@git.365jiating.com:baxiang1/RBNetwork.git
-
-CHECKOUT OPTIONS:
-  RBNetwork:
-    :commit: 9050adbecd7079b75868358ca9b9a627b86221a0
-    :git: git@git.365jiating.com:baxiang1/RBNetwork.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
   Expecta+Snapshots: c343f410c7a6392f3e22e78f94c44b6c0749a516
   FBSnapshotTestCase: 918c55861356ee83aee7843d759f55a18ff6982b
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
-  RBBusKit: 6d6618033f9e8d71755e0cdbdb67ddb2d1d1ef69
-  RBNetwork: 26dad0a565c0711e352be819b98e1dd1b05f09cb
+  RBBusKit: 7b2c78825b05d9fe4267528b55529dae923abe19
   Specta: ac94d110b865115fe60ff2c6d7281053c6f8e8a2
   YYKit: 4c0dfcb4bb3205dfbb172e64ca57a50b1675d545
 
-PODFILE CHECKSUM: f9bdc1b29ddfd7b71ea56847685025e82a2fec87
+PODFILE CHECKSUM: 68cad19ae45929b6af3ba9df4e5d9c2fb50939fc
 
 COCOAPODS: 1.1.0.beta.2
