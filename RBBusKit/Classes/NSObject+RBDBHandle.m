@@ -220,9 +220,9 @@ FMDatabaseQueue * DBQueue(){
             NSArray * currentValue = (NSArray *)value;
             for(id a in currentValue){
                 if([a conformsToProtocol:@protocol(RBDBProtocol)]){
-                    NSObject * oldid = [self enumerationChild:a Param:nil excueBlock:block];
+                    NSNumber * oldid = [self enumerationChild:a Param:nil excueBlock:block];
                     [a setPrimaryValue:oldid];
-                    [newArray addObject:[NSString stringWithFormat:@"db_modle|%@|%@|%d",NSStringFromClass([a class]),[[a class] getTableName],oldid]];
+                    [newArray addObject:[NSString stringWithFormat:@"db_modle|%@|%@|%@",NSStringFromClass([a class]),[[a class] getTableName],oldid]];
                 }
             }
             NSString * json = nil;
@@ -235,7 +235,7 @@ FMDatabaseQueue * DBQueue(){
         }else if([value conformsToProtocol:@protocol(RBDBProtocol)]){
             NSObject * oldid = [self enumerationChild:value Param:nil excueBlock:block];
             [value setPrimaryValue:oldid];
-            [saveDict setValue:[NSString stringWithFormat:@"db_modle|%@|%@|%d",NSStringFromClass([value class]),[[value class] getTableName],oldid] forKey:key];
+            [saveDict setValue:[NSString stringWithFormat:@"db_modle|%@|%@|%@",NSStringFromClass([value class]),[[value class] getTableName],oldid] forKey:key];
         }
     }
     return block(param,saveDict,obj);
@@ -327,9 +327,11 @@ FMDatabaseQueue * DBQueue(){
  */
 - (void)updateParam:(RBDBParamHelper *)parama{
     [DBQueue() inDatabase:^(FMDatabase *db) {
+        
         [NSObject enumerationChild:self Param:parama excueBlock:^NSObject *(RBDBParamHelper * param, NSDictionary * saveDict,NSObject<RBDBProtocol> * modle) {
             NSString * checkMy = [modle getCheckIsMyStr];
             
+            NSLog(@"----------------- %@      ------    %@",modle,[modle primaryValue]);
             
             NSString * sql ;
             NSDictionary * info = [modle getUpdateSql:param ObjInfos:saveDict];
@@ -469,16 +471,25 @@ FMDatabaseQueue * DBQueue(){
                     continue;
                 }
                 if([dbtype isKindOfClass:[NSArray class]]){
+                    NSMutableArray * contentArray = [NSMutableArray new];
+                    
                     for(NSString * str in dbtype){
                         if([str isKindOfClass:[NSString class]] && [(NSString *)str containsString:@"db_modle|"]){
                             NSArray * dbInfo = [(NSString *)str componentsSeparatedByString:@"|"];
                             Class modleClass = NSClassFromString([dbInfo objectAtIndex:1]);
                             RBDBParamHelper * helper = [[RBDBParamHelper alloc] initModleClass:modleClass];
                             helper.comple([modleClass primary]).equal([dbInfo objectAtIndex:3]);
-                            NSArray * cArray = [modleClass getResultData:db param:nil IsDone:NO excueBlock:block];
-                            [aaaa setObject:cArray forKey:name];
+                            NSArray * cArray = [modleClass getResultData:db param:helper IsDone:NO excueBlock:block];
+                            
+                            if(cArray.count > 0){
+                                [contentArray addObjectsFromArray:cArray];
+                            }
                         }
                     }
+                    [aaaa setObject:contentArray forKey:name];
+                    
+                    
+                    
                 }
                 
             }else if([class conformsToProtocol:@protocol(RBDBProtocol)]){
@@ -486,7 +497,7 @@ FMDatabaseQueue * DBQueue(){
                 Class modleClass = NSClassFromString([dbInfo objectAtIndex:1]);
                 RBDBParamHelper * helper = [[RBDBParamHelper alloc] initModleClass:modleClass];
                 helper.comple([modleClass primary]).equal([dbInfo objectAtIndex:3]);
-                NSArray * array = [modleClass getResultData:db param:nil IsDone:NO excueBlock:block];
+                NSArray * array = [modleClass getResultData:db param:helper IsDone:NO excueBlock:block];
                 if(array.count > 0){
                     [aaaa setObject:[array objectAtIndex:0] forKey:name];
                 }
