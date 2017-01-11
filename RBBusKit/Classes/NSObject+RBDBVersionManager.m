@@ -28,6 +28,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 @implementation NSObject (RBDBVersionManager)
 + (void)load{
+    [[NSObject class] performSelector:@selector(changeCopyMethod)];
+
     Class * classes = NULL;
     int numClasses = objc_getClassList(NULL, 0);
     if (numClasses > 0 )
@@ -39,7 +41,6 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 if([classes[i] conformsToProtocol:@protocol(RBDBProtocol)]){
                     @autoreleasepool {
                         [classes[i] loadDBVersion];
-                        [[self class] performSelector:@selector(changeCopyMethod)];
 
                     }
                 }

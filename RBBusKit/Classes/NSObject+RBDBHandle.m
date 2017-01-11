@@ -15,6 +15,7 @@
 #import <YYKit/NSDictionary+YYAdd.h>
 #import "RBDBProtocol.h"
 #import "NSObject+YYAdd.h"
+#import "NSObject+YYModel.h"
 
 @implementation NSObject (RBDBHandle)
 @dynamic primaryValue;
@@ -361,6 +362,7 @@ FMDatabaseQueue * DBQueue(){
                     dataBlock(array);
                 }
             });
+           
         }];
     }];
 }
@@ -522,14 +524,30 @@ FMDatabaseQueue * DBQueue(){
 
 #pragma mark - 数据copy 情况
 
-
 + (void)changeCopyMethod{
+    SEL oriSEL = @selector(copyWithZone:);
+    SEL cusSEL = @selector(rb_copyWithZone:);
+    
+    [self changeMethod:oriSEL toMethod:cusSEL];
+    
+    SEL oriSEL1 = @selector(encodeWithCoder:);
+    SEL cusSEL1 = @selector(rb_encodeWithCoder:);
+    
+    [self changeMethod:oriSEL1 toMethod:cusSEL1];
+    
+    
+    SEL oriSEL2 = @selector(initWithCoder:);
+    SEL cusSEL2 = @selector(rb_initWithCoder:);
+    
+    [self changeMethod:oriSEL2 toMethod:cusSEL2];
+}
+
+
++ (void)changeMethod:(SEL) oriSEL toMethod:(SEL) cusSEL{
     
     Class selfClass = [self class];
-    SEL oriSEL = @selector(copyWithZone:);
     Method oriMethod = class_getInstanceMethod(selfClass, oriSEL);
     
-    SEL cusSEL = @selector(rb_copyWithZone:);
     Method cusMethod = class_getInstanceMethod(selfClass, cusSEL);
     
     BOOL addSucc = class_addMethod(selfClass, oriSEL, method_getImplementation(cusMethod), method_getTypeEncoding(cusMethod));
@@ -539,33 +557,41 @@ FMDatabaseQueue * DBQueue(){
         method_exchangeImplementations(oriMethod, cusMethod);
     }
     
-    
-    
 }
 
 
 //归档
 - (void)rb_encodeWithCoder:(NSCoder *)aCoder {
-    
-    [self rb_encodeWithCoder:aCoder];
-//    [aCoder encodeObject:[self primaryValue] forKey:@"prikey"] ;
-    
+    if([self conformsToProtocol:@protocol(RBDBProtocol)]){
+        [self modelEncodeWithCoder:aCoder];
+        [aCoder encodeObject:@(self.primaryValue) forKey:@"prikey"] ;
+    }else{
+        [self rb_encodeWithCoder:aCoder];
+    }
 }
 //解档
 - (id)rb_initWithCoder:(NSCoder *)aDecoder{
-    NSObject * obj = [self rb_initWithCoder:aDecoder];
     if([self conformsToProtocol:@protocol(RBDBProtocol)]){
+        NSObject * obj = [self modelInitWithCoder:aDecoder];
         [obj setPrimaryValue:[aDecoder decodeObjectForKey:@"prikey"]];
+        return obj;
+    }else{
+        return [self rb_initWithCoder:aDecoder];
     }
-    return obj;
 }
 
 - (id)rb_copyWithZone:(NSZone *)zone{
-    NSObject * object = [self rb_copyWithZone:zone];
-    if([object conformsToProtocol:@protocol(RBDBProtocol)]){
-//        [object setPrimaryValue:[self primaryValue]];
+    if([self conformsToProtocol:@protocol(RBDBProtocol)]){
+//        NSObject * object = [self modelCopy];
+//        if([object conformsToProtocol:@protocol(RBDBProtocol)]){
+//            [object setPrimaryValue:[self primaryValue]];
+//        }
+//        return object;
+        return [self modelCopy];
+    }else{
+        return [self rb_copyWithZone:zone];
     }
-    return object;
+   
 }
 
 @end

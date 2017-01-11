@@ -43,6 +43,7 @@ __attribute__((overloadable)) void logAnything(CGRect rect) {
 {
     [super viewDidLoad];
    
+  
     RB1 * rb = [[RB1 alloc] init];
     rb.aaa =  1000;
     
@@ -63,11 +64,13 @@ __attribute__((overloadable)) void logAnything(CGRect rect) {
     aaa1.aaaa = 1321;
     aaa1.aaa = 1000;
     rb.arr = @[aaa,aaa1];
-
     
-  
+    
+    RB1 * aa = [rb copy];
+    NSArray * arra = @[[rb copy],[rb copy],[rb copy]];
+    
 
-    [rb save];
+//    [rb save];
     
 
     
@@ -102,13 +105,13 @@ __attribute__((overloadable)) void logAnything(CGRect rect) {
     
     [RB1 saveArrays:array];
     
-    for(int i = 10 ; i < 20; i ++){
-        RB1 * rb = [array objectAtIndex:i];
-        NSArray * aa = rb.arr;
-        ((RBtewtetw *)[aa objectAtIndex:0]).aaaa = 3234;
-        [rb copy];
-        [[rb copy] update];
-    }
+//    for(int i = 10 ; i < 20; i ++){
+//        RB1 * rb = [array objectAtIndex:i];
+//        NSArray * aa = rb.arr;
+//        ((RBtewtetw *)[aa objectAtIndex:0]).aaaa = 3234;
+//        [rb copy];
+//        [[rb copy] update];
+//    }
     
     
      //*/
