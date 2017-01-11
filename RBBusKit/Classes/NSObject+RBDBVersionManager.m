@@ -12,6 +12,7 @@
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import "NSObject+RBTools.h"
+#import "RBDBProtocol.h"
 
 NSComparator cmptr = ^(id obj1, id obj2){
     if ([obj1 hash] > [obj2 hash]) {
@@ -38,9 +39,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 if([classes[i] conformsToProtocol:@protocol(RBDBProtocol)]){
                     @autoreleasepool {
                         [classes[i] loadDBVersion];
-                        [classes[i] changeCopyMethod];
+                        [[self class] performSelector:@selector(changeCopyMethod)];
 
-                        
                     }
                 }
             }
@@ -98,9 +98,15 @@ NSComparator cmptr = ^(id obj1, id obj2){
     
     NSUInteger version = [[tableInfo objectForKey:@"versioin"] intValue] ;
     NSString * tableKey = [tableInfo objectForKey:@"keys"];
-    NSString * primary = [tableInfo objectForKey:@"primary"];
+    NSArray * uniques = [tableInfo objectForKey:@"unique"];
     
-    if([tableKey isEqualToString:currenInfo] && [primary isEqualToString:[self primary]]){
+    NSArray * currentQunques = nil;
+    
+    if([[self class] respondsToSelector:@selector(uniqueKeys)]) {
+        currentQunques = [[self class] uniqueKeys];
+    
+    }
+    if([tableKey isEqualToString:currenInfo] && ((currentQunques == nil && uniques ==nil) || ([currentQunques isEqualToArray:uniques]))){
         NSLog(@"%@ The latest version",self);
         return ;
     }
@@ -110,9 +116,14 @@ NSComparator cmptr = ^(id obj1, id obj2){
         [dict removeObjectForKey:keyStr];
         [self deleteTable];
     }else {
-        [dict setObject:@{@"versioin":@(version),@"keys":currenInfo,@"primary":[self primary]} forKey:keyStr];
-        [self changeTable:tableKey OldPrimaryKey:[tableInfo objectForKey:@"primary"]];
+        if(currentQunques != nil){
+            [dict setObject:@{@"versioin":@(version),@"keys":currenInfo,@"unique":currentQunques} forKey:keyStr];
+        }else{
+            [dict setObject:@{@"versioin":@(version),@"keys":currenInfo} forKey:keyStr];
+        }
+        [self changeTable:tableKey];
     }
+  
     
     if([dict count] == 0)
         return ;
@@ -120,26 +131,19 @@ NSComparator cmptr = ^(id obj1, id obj2){
     NSUInteger dbVersion = [[dbInfo objectForKey:@"dbVersion"] intValue];
     dbVersion ++;
     [dict setObject:@(dbVersion) forKey:@"dbVersion"];
-    
     [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"RBDbInfo"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
 }
 
 
-+ (void)changeTable:(NSString *)oldkeystring OldPrimaryKey:(NSString *)primary {
-    
++ (void)changeTable:(NSString *)oldkeystring{
     if([oldkeystring isKindOfClass:[NSString class]] && [oldkeystring length] > 0){
         NSArray * oldkeys = [oldkeystring componentsSeparatedByString:@","];
-        
         [self resetTable:oldkeys];
-        
-        
     }else{
         NSString * sql = [self getCreateTableSql:nil];
         NSLog(@"%@",sql);
-        
-        
         [NSObject executeSQL:sql];
     }
 }
@@ -147,9 +151,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 + (void)resetTable:(NSArray *)oldKeys{
     
     NSMutableArray * sqlArray = [NSMutableArray new];
-    
     NSString * tempName = @"temp";
-    
     NSString * tempSql = [self getCreateTableSql:tempName];
     if(tempSql == nil){
         NSString * temp = [NSString stringWithFormat:@"reset table error %@",self];
@@ -160,24 +162,19 @@ NSComparator cmptr = ^(id obj1, id obj2){
     
     NSMutableArray * publicKeys = [NSMutableArray new];
     NSArray * allkeys = [self getAllPropertiesNamed];
-    
     for(NSString * key in allkeys){
         if([oldKeys containsObject:key]){
             [publicKeys addObject:key];
         }
     }
-    
     NSString * tableName = [self getTableName];
-    
     if([publicKeys count] > 0){
         NSString * par = [publicKeys componentsJoinedByString:@","];
         [sqlArray addObject:[NSString stringWithFormat:@"INSERT INTO %@ (%@) SELECT %@ FROM %@",tempName,par,par,tableName]];
-        
     }
     [sqlArray addObject:[NSString stringWithFormat:@"DROP TABLE %@ ",tableName]];
     [sqlArray addObject:[NSString stringWithFormat:@"alter table %@ rename to %@ ",tempName,tableName]];
-    [sqlArray addObject:@"COMMIT"];
-    
+    NSLog(@"%@",sqlArray);
     [NSObject transaction:^NSArray *{
         return sqlArray;
     }];
@@ -195,49 +192,36 @@ NSComparator cmptr = ^(id obj1, id obj2){
     NSArray * array = [self getAllProperties];
     if(array.count == 0)
         return nil;
-    
     NSMutableString * sql = [NSMutableString new];
-    NSString * primary = [self primary];
-    
     NSMutableArray * paramArray = [NSMutableArray new];
-    
     for(NSDictionary * dict in array){
         NSString * type = [self ocTypeToSql:dict[@"property"]];
         NSString * name = dict[@"name"];
         if([type length] > 0 && [name length] > 0){
-            if([name isEqualToString:primary]){
-                [paramArray addObject:[NSString stringWithFormat:@"%@ %@ primary key",name,type]];
+            if([[self class] respondsToSelector:@selector(uniqueKeys)] && [[[self class] uniqueKeys] containsObject:name]){
+                [paramArray addObject:[NSString stringWithFormat:@"%@ %@ unique",name,type]];
             }else{
                 [paramArray addObject:[NSString stringWithFormat:@"%@ %@",name,type]];
             }
         }
     }
     NSString * paramStr = [paramArray componentsJoinedByString:@","];
-    
     if([paramStr length] == 0){
         return nil;
     }
-    
     NSString * crateStr = @"";
-    
     if([istemp length] > 0){
         crateStr = [NSString stringWithFormat:@"CREATE TABLE %@ ",istemp];
     }else{
         crateStr = [NSString stringWithFormat:@"CREATE TABLE %@",[self getTableName]];
     }
-    
-    if([paramStr containsString:@"primary key"]){
-        [sql appendFormat:@"%@  ( %@ )",crateStr,paramStr];
-    }else{
-        [sql appendFormat:@"%@  ( %@ integer primary key autoincrement , %@ )",crateStr,primary,paramStr];
-    }
+    [sql appendFormat:@"%@  ( id integer primary key autoincrement , %@ ,superid integer)",crateStr,paramStr];
     return sql;
 }
 
 
 + (NSString *)getTableName{
     NSString * name = [[[self class] description] lowercaseString];
-    
     if([name hasPrefix:@"rb"]){
         name = [name stringByReplacingCharactersInRange:NSMakeRange(0, 2) withString:@"db_"];
     }else{

@@ -10,9 +10,17 @@
 
 @implementation RB1
 
-+ (NSString *)primary{
-    return @"fdsfdsfdsafsa";
+//不重复的键
+//+ (NSArray *) uniqueKeys{
+//    return @[@"i"];
+//}
+
+//key 包含modle
++ (NSDictionary *) equivalentModle{
+    return @{@"arr":@"RBtewtetw"};
+
 }
+
 #pragma mark ------------------- 解析部分 ------------------------
 //归档
 - (void)encodeWithCoder:(NSCoder *)aCoder {

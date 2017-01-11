@@ -16,7 +16,10 @@
 @protocol RBDBProtocol <NSObject>
 
 @optional
-+ (NSString *) primary;
+//不重复的键
++ (NSArray *) uniqueKeys;
 
+//key 包含modle
++ (NSDictionary *) equivalentModle;
 
 @end

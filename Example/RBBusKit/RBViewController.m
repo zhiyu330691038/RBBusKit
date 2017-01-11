@@ -42,34 +42,65 @@ __attribute__((overloadable)) void logAnything(CGRect rect) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+   
+    RB1 * rb = [[RB1 alloc] init];
+    rb.aaa =  1000;
+    
+    rb.i = 123 ;
+    RBtewtetw * aaa = [[RBtewtetw alloc] init];
+    aaa.aaaa = 1321;
+    aaa.aaa = 1000;
+    
+    
+    RBTest1 * test = [[RBTest1 alloc] init];
+    test.name = @"1";
+    
+    RBTest1 * test2 = [[RBTest1 alloc] init];
+    test2.name = @"1";
+    aaa.arr1 = @[test,test2];
+    
+    RBtewtetw * aaa1 = [[RBtewtetw alloc] init];
+    aaa1.aaaa = 1321;
+    aaa1.aaa = 1000;
+    rb.arr = @[aaa,aaa1];
 
+    
+  
+
+    [rb save];
+    
+
+    
+
+    [RB1 selectAll:^(NSArray * array) {
+        NSLog(@"%@",array);
+        for(RB1 * obj in array){
+            [obj remove];
+        }
+    }];
     ///* 保存数据
 
+    return;
     NSMutableArray * array = [NSMutableArray new];
     
     for(int i = 0 ; i < 100; i ++){
         RB1 * rb = [[RB1 alloc] init];
         rb.aaa = i + 1000;
-        rb.aaaa = 10000 - i * i ;
-        rb.fdas = 100000 - i  ;
-        rb.teaa = [NSString stringWithFormat:@"teaa  %d",i];
+
         rb.i = i ;
-        rb.image = [UIImage imageNamed:@"1"];
         RBtewtetw * aaa = [[RBtewtetw alloc] init];
         aaa.aaaa = 3433;
         rb.arr = @[aaa];
-        rb.modle = aaa;
         aaa.aaa = rand() % 1000;
-        rb.adta = [NSDate dateWithTimeIntervalSinceNow:i % 100];
         rb.f = i * i;
         
         [array addObject:rb];
-//        [rb save];
+        [rb save];
     }
     
     
     
-    [RB1 save:array Param:nil];
+    [RB1 saveArrays:array];
     
     for(int i = 10 ; i < 20; i ++){
         RB1 * rb = [array objectAtIndex:i];

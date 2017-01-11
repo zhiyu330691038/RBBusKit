@@ -27,17 +27,17 @@ public extension FBSnapshotTestCase {
         let referenceImagesDirectory = "\(envReferenceImageDirectory)\(suffix)"
         if viewOrLayer.isKindOfClass(UIView) {
           do {
-            try compareSnapshotOfView(viewOrLayer as! UIView, referenceImagesDirectory: referenceImagesDirectory, identifier: identifier, tolerance: tolerance)
+            `try` compareSnapshotOfView(viewOrLayer as! UIView, referenceImagesDirectory: referenceImagesDirectory, identifier: identifier, tolerance: tolerance)
             comparisonSuccess = true
-          } catch let error1 as NSError {
+          } `catch` let error1 as NSError {
             error = error1
             comparisonSuccess = false
           }
         } else if viewOrLayer.isKindOfClass(CALayer) {
           do {
-            try compareSnapshotOfLayer(viewOrLayer as! CALayer, referenceImagesDirectory: referenceImagesDirectory, identifier: identifier, tolerance: tolerance)
+            `try` compareSnapshotOfLayer(viewOrLayer as! CALayer, referenceImagesDirectory: referenceImagesDirectory, identifier: identifier, tolerance: tolerance)
             comparisonSuccess = true
-          } catch let error1 as NSError {
+          } `catch` let error1 as NSError {
             error = error1
             comparisonSuccess = false
           }

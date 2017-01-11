@@ -13,7 +13,10 @@
     return @"aaa";
 }
 
-
++ (NSDictionary *) equivalentModle{
+    return @{@"arr1":@"RBTest1"};
+    
+}
 #pragma mark ------------------- 解析部分 ------------------------
 //归档
 - (void)encodeWithCoder:(NSCoder *)aCoder {

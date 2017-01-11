@@ -1,4 +1,6 @@
+#ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#endif
 
 #import "NSObject+RBDBHandle.h"
 #import "NSObject+RBDBVersionManager.h"

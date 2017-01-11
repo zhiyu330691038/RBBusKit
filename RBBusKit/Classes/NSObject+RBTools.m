@@ -15,7 +15,6 @@
 
 
 @implementation NSObject (RBTools)
-
 /**
  *  @author 智奎宇, 16-09-26 21:09:13
  *
@@ -38,22 +37,8 @@
     
     return [[[[[NSUserDefaults standardUserDefaults] objectForKey:@"RBDbInfo"] objectForKey:keyStr] objectForKey:@"versioin"] unsignedIntegerValue];
 }
-//- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic{
-//    NSLog(@"%@",[self class]);
-//    if([self conformsToProtocol:@protocol(RBDBProtocol)]){
-//        NSMutableDictionary * dbIno = [NSMutableDictionary new];
-//
-//        NSString * prikey = [[self class] primary];
-//        if(![[dic  allKeys] containsObject:prikey]){
-//            NSNumber * pri = @([self primaryValue]);
-//            [dbIno setObject:pri forKey:@"primary"];
-//        }
-//        [dbIno setObject:[[self class] getTableName] forKey:@"table"];
-//        [dbIno setObject:NSStringFromClass([self class]) forKey:@"class"];
-//        [dic setObject:dbIno forKey:@"rb_dbinfo"];
-//    }
-//    return YES;
-//}
+
+
 
 #pragma mark 工具获取类信息
 + (NSString *)runToOCType:(NSString *)property{
@@ -100,8 +85,13 @@
         }
     }
     free(ivars);
+    if([instanceName isEqualToString:@"superid"]){
+        return @{@"name":instanceName,@"property":@"i"};
+        
+    }
     if(key == nil || pro == nil)
         return nil;
+   
     
     return @{@"name":key,@"property":pro};
     
@@ -162,6 +152,7 @@
     for(NSDictionary * dic in [self getAllProperties]){
         [array addObject:dic[@"name"]];
     }
+    [array addObject:@"superid"];
     return array;
 }
 

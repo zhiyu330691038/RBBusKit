@@ -13,6 +13,8 @@
 
 @interface NSObject (RBTools)
 
+
+
 /**
  *  @author 智奎宇, 16-09-26 21:09:13
  *
@@ -29,17 +31,6 @@
  *  @return 表版本号
  */
 + (NSUInteger)tbVersion;
-
-/**
- *  @author 智奎宇, 16-09-26 21:09:01
- *
- *  主键
- *
- *  @return 主键名称
- */
-+ (NSString *)primary;
-
-+ (bool)primaryKeyObjVar;
 
 
 + (NSDictionary *)infoWithInstance:(NSString *)instanceName;
