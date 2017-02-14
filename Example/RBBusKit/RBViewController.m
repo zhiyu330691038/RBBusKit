@@ -39,6 +39,8 @@ __attribute__((overloadable)) void logAnything(CGRect rect) {
 #define NS_REQUIRES_SUPER __attribute__((objc_requires_super))
 @implementation RBViewController
 
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

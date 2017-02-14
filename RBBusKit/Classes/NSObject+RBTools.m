@@ -156,9 +156,6 @@
     return array;
 }
 
-- (NSString *)description{
-    
-    return [NSString stringWithFormat:@"Modle Class (%@)\n%@",[self class],[[[[self modelToJSONString] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"	" withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""]];
-}
+
 
 @end

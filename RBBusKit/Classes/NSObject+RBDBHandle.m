@@ -246,6 +246,7 @@ FMDatabaseQueue * DBQueue(){
     }
 }
 
+#pragma mark -
 
 /**
  *  @author 智奎宇, 16-09-28 20:09:39
@@ -259,6 +260,21 @@ FMDatabaseQueue * DBQueue(){
         }];
     }];
 }
+
+/**
+ *  @author 智奎宇, 16-09-28 20:09:09
+ *
+ *  删除modle 类型数据
+ *
+ *  @param param 删除条件
+ */
++ (void)removeParam:(RBDBParamHelper *)param{
+    [DBQueue() inDatabase:^(FMDatabase *db) {
+        
+    }];
+
+}
+
 
 + (void)enumerationDeleteModle:(NSObject *)obj SuperId:(int)superId excueBlock:(void (^)(NSString *,NSDictionary *)) block{
     __block NSString * tableName = [[obj  class] getTableName];
